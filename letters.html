@@ -1,0 +1,85 @@
+<html>
+
+<body>
+   <canvas id="glcanvas" width="750" height="550" ></canvas>
+   <p><strong>Use ARROWS to Translate the letters!</strong></p>
+</body>
+
+
+<button id="ClockwiseButton" style="height:50px;width:150px" > 
+		Clockwise Rotation
+</button>
+
+<button id="NonClockwiseButton" style ="height:50px;width:150px" > 
+		 Counter Clockwise Rotation
+</button>
+
+
+<select id="scaleMenu" size="2"  style = "height:40px;width:150px">
+	<option value="0">
+			Make Letters Smaller
+	</option>
+	
+	<option value="1">
+			Make Letters Bigger
+	</option>
+</select>
+
+
+<div>
+	RED: 0 
+		<input id="redSlider" type="range" min="0" max="1" step="0.1" value="0.2" />1
+</div> 
+<div>
+    GREEN: 0
+		<input id="greenSlider" type="range" min="0" max="1" step="0.1" value="0.5" />1
+</div> 
+<div>
+	BLUE: 0
+		<input id="blueSlider" type="range" min="0" max="1" step="0.1" value="0.6" />1
+</div>
+
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+   attribute vec4 vPosition; // different for each vertex of a primitive
+   uniform float theta;
+   uniform float distanceX;   // remain same for all vertices displayed with that gl.drawArrays call in .js file
+   uniform float distanceY;
+   uniform float scaleX; 
+   uniform float scaleY;
+   
+
+	void main() {
+		// do the rotation by theta on the GPU
+		gl_Position.x = (cos(theta) * vPosition.x - sin(theta) * vPosition.y);
+		gl_Position.y =	(sin(theta) * vPosition.x + cos(theta) * vPosition.y);
+		gl_Position.x +=  distanceX; 
+		gl_Position.y +=  distanceY;
+		gl_Position.x *=  scaleX; 
+		gl_Position.y *=  scaleY; 
+		
+		gl_Position.z = 0.0; // everything is 2 dimensional
+		gl_Position.w = 1.0; // using homogeneous coordinates
+		
+	}
+
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment"> 
+	precision mediump float; 
+	uniform float myRed;
+	uniform float myGreen;
+	uniform float myBlue;
+	
+   void main() {
+      gl_FragColor = vec4(myRed ,myGreen, myBlue, 1.0 );
+   }
+</script>
+
+<script src= "initShaders.js"> </script>
+<script src= "MV.js"> </script>
+<script src= "letters.js"> </script>
+<script src= "webgl-utils.js"> </script>
+
+</html>
